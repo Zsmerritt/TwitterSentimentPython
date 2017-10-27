@@ -1,5 +1,4 @@
-import re
-import tweepy
+import re, tweepy, datetime, time, csv
 from tweepy import OAuthHandler
 from textblob import TextBlob
  
@@ -12,10 +11,10 @@ class TwitterClient(object):
         Class constructor or initialization method.
         '''
         # keys and tokens from the Twitter Dev Console
-        consumer_key = ''
-        consumer_secret = ''
-        access_token = ''
-        access_token_secret = ''
+        consumer_key = 'j3KuVlGlDsSxCozoVfEaLgRyR'
+        consumer_secret = 'tpDWEUicXb6BxiFdTkoX6vZo3vJLVYa1PoFWF3fVw6XHmDRn74'
+        access_token = '922587032051785728-k0v1FRY1jx9FIh0yO1wrNQxB3ELErlL'
+        access_token_secret = '0uxeQE0bNtvWSv8gB2DSCaTajQNDMCMUVuOCoSWOt0ArI'
  
         # attempt authentication
         try:
@@ -88,33 +87,48 @@ class TwitterClient(object):
         except tweepy.TweepError as e:
             # print error (if any)
             print("Error : " + str(e))
+
+    def writeToCSV(self):
+        with open('sentiment.csv', 'a', newline='') as csvfile:    
+            #Use csv Writer
+            csvWriter = csv.writer(csvfile)
+            # calling function to get tweets
+            tweets = self.get_tweets(query = 'Bitcoin',count=1000, page = 1, start='2017-01-01', end='2017-10-27')
+
+            if tweets==None:
+                print('No Tweets')
+            # picking positive tweets from tweets
+            else:
+                ptweets = [tweet for tweet in tweets if tweet['sentiment'] == 'positive']
+                positivePercent = 100*len(ptweets)/len(tweets)
+            # percentage of positive tweets
+                print("Positive tweets percentage:",positivePercent," %")
+            # picking negative tweets from tweets
+                ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative']
+                negativePercent = 100*len(ntweets)/len(tweets)
+            # percentage of negative tweets
+                print("Negative tweets percentage: ",negativePercent," %")
+
+                nuetralPercent = 100*(len(tweets) - (len(ntweets) + len(ptweets)))/len(tweets)
+            #print(nuetral)
+            # percentage of neutral tweets
+                print("Neutral tweets percentage:",nuetralPercent,"%")
+                csvValue = datetime.datetime.now(),positivePercent,negativePercent,nuetralPercent
+                csvWriter.writerow(csvValue)
  
 def main():
     # creating object of TwitterClient Class
     api = TwitterClient()
+    while True:
+        api.writeToCSV()
+        time.sleep(15)
     #check to see if throttled
     #data = api.rate_limit_status()
     #print(data)
+    
 
-    # calling function to get tweets
-    tweets = api.get_tweets(query = 'Bitcoin',count=100, page = 1, start='2017-01-01', end='2017-10-27')
 
-    if tweets==None:
-        print('No Tweets')
-    # picking positive tweets from tweets
-    else:
-        ptweets = [tweet for tweet in tweets if tweet['sentiment'] == 'positive']
-    # percentage of positive tweets
-        print("Positive tweets percentage: {} %".format(100*len(ptweets)/len(tweets)))
-    # picking negative tweets from tweets
-        ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative']
-    # percentage of negative tweets
-        print("Negative tweets percentage: {} %".format(100*len(ntweets)/len(tweets)))
-
-        nuetral = 100*(len(tweets) - (len(ntweets) + len(ptweets)))/len(tweets)
-    #print(nuetral)
-    # percentage of neutral tweets
-        print("Neutral tweets percentage:",nuetral,"%")
+        
  
     # printing first 5 positive tweets
     #print("\n\nPositive tweets:")
