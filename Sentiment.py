@@ -116,6 +116,7 @@ class TwitterClient(object):
                 print("Neutral tweets percentage:",nuetralPercent,"%")
                 csvValue = datetime.datetime.now(),positivePercent,negativePercent,nuetralPercent
                 csvWriter.writerow(csvValue)
+        csvfile.cloes()
  
 def main():
     # creating object of TwitterClient Class
