@@ -94,7 +94,7 @@ class TwitterClient(object):
             #Use csv Writer
             csvWriter = csv.writer(csvfile)
             # calling function to get tweets
-            tweets = self.get_tweets(query = 'Bitcoin',count=1000, page = 1, start='2017-01-01', end='2017-10-27')
+            tweets = self.get_tweets(query = 'Bitcoin',count=1000, page = 1, start=datetime.date.today()-datetime.timedelta(days=30), end=datetime.date.today())
 
             if tweets==None:
                 print('No Tweets')
@@ -116,13 +116,14 @@ class TwitterClient(object):
                 print("Neutral tweets percentage:",nuetralPercent,"%")
                 csvValue = datetime.datetime.now(),positivePercent,negativePercent,nuetralPercent
                 csvWriter.writerow(csvValue)
+        csvfile.close()
  
 def main():
     # creating object of TwitterClient Class
     api = TwitterClient()
     while True:
         api.writeToCSV()
-        time.sleep(15)###CHANGE TO BE 4 TIME A DAY
+        time.sleep(21600)###CHANGE TO BE 4 TIME A DAY
     #check to see if throttled
     #data = api.rate_limit_status()
     #print(data)
