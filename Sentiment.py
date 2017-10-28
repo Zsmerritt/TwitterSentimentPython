@@ -90,11 +90,38 @@ class TwitterClient(object):
             print("Error : " + str(e))
 
     def writeToCSV(self):
-        with open('sentiment.csv', 'a', newline='') as csvfile:    
+        with open('BitcoinSentiment.csv', 'a', newline='') as csvfile:    
             #Use csv Writer
             csvWriter = csv.writer(csvfile)
             # calling function to get tweets
             tweets = self.get_tweets(query = 'Bitcoin',count=1000, page = 1, start=datetime.date.today()-datetime.timedelta(days=30), end=datetime.date.today())
+
+            if tweets==None:
+                print('No Tweets')
+            # picking positive tweets from tweets
+            else:
+                ptweets = [tweet for tweet in tweets if tweet['sentiment'] == 'positive']
+                positivePercent = 100*len(ptweets)/len(tweets)
+            # percentage of positive tweets
+                print("Positive tweets percentage:",positivePercent," %")
+            # picking negative tweets from tweets
+                ntweets = [tweet for tweet in tweets if tweet['sentiment'] == 'negative']
+                negativePercent = 100*len(ntweets)/len(tweets)
+            # percentage of negative tweets
+                print("Negative tweets percentage: ",negativePercent," %")
+
+                nuetralPercent = 100*(len(tweets) - (len(ntweets) + len(ptweets)))/len(tweets)
+            #print(nuetral)
+            # percentage of neutral tweets
+                print("Neutral tweets percentage:",nuetralPercent,"%")
+                csvValue = datetime.datetime.now(),positivePercent,negativePercent,nuetralPercent
+                csvWriter.writerow(csvValue)
+        csvfile.cloes()
+        with open('EthereumSentiment.csv', 'a', newline='') as csvfile:    
+            #Use csv Writer
+            csvWriter = csv.writer(csvfile)
+            # calling function to get tweets
+            tweets = self.get_tweets(query = 'Ethereum', count=1000, page = 1, start=datetime.date.today()-datetime.timedelta(days=30), end=datetime.date.today())
 
             if tweets==None:
                 print('No Tweets')
