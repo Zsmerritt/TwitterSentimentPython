@@ -1,3 +1,4 @@
+
 import re, tweepy, datetime, time, csv
 from tweepy import OAuthHandler
 from textblob import TextBlob
@@ -11,10 +12,10 @@ class TwitterClient(object):
         Class constructor or initialization method.
         '''
         # keys and tokens from the Twitter Dev Console
-        consumer_key = 'j3KuVlGlDsSxCozoVfEaLgRyR'
-        consumer_secret = 'tpDWEUicXb6BxiFdTkoX6vZo3vJLVYa1PoFWF3fVw6XHmDRn74'
-        access_token = '922587032051785728-k0v1FRY1jx9FIh0yO1wrNQxB3ELErlL'
-        access_token_secret = '0uxeQE0bNtvWSv8gB2DSCaTajQNDMCMUVuOCoSWOt0ArI'
+        consumer_key = ''
+        consumer_secret = ''
+        access_token = ''
+        access_token_secret = ''
  
         # attempt authentication
         try:
@@ -121,7 +122,7 @@ def main():
     api = TwitterClient()
     while True:
         api.writeToCSV()
-        time.sleep(15)
+        time.sleep(15)###CHANGE TO BE 4 TIME A DAY
     #check to see if throttled
     #data = api.rate_limit_status()
     #print(data)
